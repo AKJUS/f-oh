@@ -51,15 +51,9 @@ export struct HomePage {
   }
 
   aboutToAppear() {
-    // DataSource.getHomePageData((data: HomePageData) =>{
-    //   this.homePageData = data;
-    // }, (err) => {
-    //   promptAction.showToast({ message: $r('app.string.network_error'), duration: ToastDuration });
-    // });
-
-    DataSource.getAppList(AppType.APP, (data: [], totalCount: number) => {
+    DataSource.getAppList(AppType.APP, (data: AppInfo[], totalCount: number) => {
       this.totalCount = totalCount;
-      this.appCount = (data as []).length;
+      this.appCount = data.length;
       this.gameCount = totalCount - this.appCount;
     })
 

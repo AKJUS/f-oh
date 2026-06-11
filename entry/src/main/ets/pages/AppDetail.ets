@@ -17,6 +17,7 @@
 
 import { InfoRow } from '../components/InfoRow';
 import { AppInfo } from '../model/AppInfo';
+import { DataSource } from '../data/DataSource';
 
 export interface RouterParams {
   appInfo?: AppInfo;
@@ -35,6 +36,16 @@ struct AppDetail {
     this.localParams = params
     this.appInfo = new AppInfo(params.appInfo)
     this.localVersionName = params.localVersionName as string
+    // 列表接口不含描述、源码地址、发布时间，从详情接口补全
+    DataSource.getAppDetail(this.appInfo.packageName, (info: AppInfo) => {
+      info.status = this.appInfo.status;
+      info.actionText = this.appInfo.actionText;
+      this.appInfo = info;
+    }, (err: Error) => {
+      this.getUIContext().getPromptAction().showToast({
+        message: $r('app.string.network_error'), duration: 2000
+      })
+    })
     // todo: uncomment later
     console.info('AboutComponent onPageShow');
     // WindowStageUtil.setLayoutFullScreen(globalThis.windowStage, '#ffffff', WindowStageUtil.COLOR_BLACK, '#ffffff', WindowStageUtil.COLOR_BLACK);
@@ -149,6 +160,10 @@ struct AppDetail {
                     title: $r('app.string.repo'),
                     info: this.appInfo.openSourceAddress,
                     clickHandler: () => {
+                      // 详情接口未返回前或无源码地址时不跳转
+                      if (!this.appInfo.openSourceAddress) {
+                        return;
+                      }
                       this.getUIContext().getRouter().pushUrl({
                         url: 'pages/Browser', params: {
                           title: this.appInfo.name,

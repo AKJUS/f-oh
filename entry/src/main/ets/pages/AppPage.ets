@@ -32,9 +32,12 @@ export default struct App {
     source.fetchHttpCode().then((code) => {
       this.httpCode = code; // 更新状态变量以触发 UI 的重新渲染
       if (code == 200) {
-        DataSource.getAppList(this.appType, (data: AppInfo[]) => {
+        DataSource.getAppList(this.appType, (data: AppInfo[], totalCount: number) => {
           this.appList = data;
           this.isLoading = false;
+        }, (err: Error) => {
+          this.isLoading = false;
+          this.httpCode = -1;
         })
       }
       else {

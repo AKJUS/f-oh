@@ -21,7 +21,8 @@ import { pasteboard } from "@kit.BasicServicesKit"
 export struct InfoRow {
   icon?: string | PixelMap | Resource
   title: string | Resource = ''
-  info?: string | Resource
+  // @Prop 保证父组件异步刷新（如详情接口返回）后该值同步更新
+  @Prop info: string | Resource = ''
   clickHandler?: (event?: ClickEvent) => void
   showRightArrow?: boolean = true
 

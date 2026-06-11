@@ -105,7 +105,10 @@ export default struct AppListItem {
             .margin({ top: 2, bottom: 5 })
             .maxLines(1)
             .textOverflow({ overflow: TextOverflow.Ellipsis })
-          Text(this.appInfo.desc).fontSize(12).maxLines(2).textOverflow({ overflow: TextOverflow.Ellipsis })
+          Text(this.appInfo.desc || this.appInfo.vender)
+            .fontSize(12)
+            .maxLines(2)
+            .textOverflow({ overflow: TextOverflow.Ellipsis })
         }
         .height(55)
         .margin({ left: 10, right: 10 })
